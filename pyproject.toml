@@ -9,7 +9,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.31.0"
-dotenv = "^0.0.5"
+python-dotenv = "^1.0.0"
+pydantic = "^2.5.1"
+dataclass-wizard = "^0.22.2"
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^68.2.2"
