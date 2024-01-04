@@ -46,6 +46,14 @@ class ArtistDetails(JSONSerializable):
             "ManagementDetails": "management",
         }
 
+    def __str__(self):
+        return (
+            f"ArtistDetails:\n"
+            f"about = {self.about}\n"
+            f"bookings = {self.bookings}\n"
+            f"management = {self.management}"
+        )
+
 
 @dataclass
 class Link(JSONSerializable):
@@ -65,13 +73,15 @@ class Link(JSONSerializable):
             "Url": "url",
         }
 
+    def __str__(self):
+        return f"Link:\nplatform = {self.platform}\nurl = {self.url}"
+
 
 @dataclass
 class Artist(JSONSerializable):
     """Class represents Artist object
 
     Attributes:
-        about (`str`): Artist's bio.
         details (`ArtistDetails`): Artist's bio, bookings and mgmt details.
         name (`str`): Artist's name.
         is_public (`bool`): Whether the artist's profile page is public.
@@ -89,6 +99,7 @@ class Artist(JSONSerializable):
         profile_file_uuid (`str`): profile_file_uuid.
         square_file_uuid (`str`): File ID for square.
         tags (`list[`str`]`): The list of tags for the artist.
+        about (`str`, optional): Artist's bio.
         landscape_file_uuid (`str`, optional): File ID for landscape.
         portrait_file_uuid (`str`, optional): File ID for portrait.
         square_file_uuid (`str`, optional): File ID for square.
@@ -98,7 +109,6 @@ class Artist(JSONSerializable):
         featured_video_url (`str`, optional): URL to artist's featured video.
     """
 
-    about: str
     details: ArtistDetails
     uuid: str
     name: str
@@ -109,6 +119,7 @@ class Artist(JSONSerializable):
     active_years: list[int] | None = field(default_factory=list)
     tags: list[str] | None = field(default_factory=list)
     links: list[Link] | None = field(default_factory=list)
+    about: str | None = None
     logo_file_uuid: str | None = None
     square_file_uuid: str | None = None
     portrait_file_uuid: str | None = None
@@ -116,6 +127,9 @@ class Artist(JSONSerializable):
     featured_release_cover_file_uuid: str | None = None
     featured_release_uuid: str | None = None
     featured_video_url: str | None = None
+
+    def __post_init__(self):
+        self.active_years = sorted(self.active_years)
 
     class Meta(JSONSerializable.Meta):
         json_key_to_field = {
@@ -138,3 +152,12 @@ class Artist(JSONSerializable):
             "FeaturedVideoURL": "featured_video_url",
             "Links": "links",
         }
+
+    def __str__(self):
+        return (
+            f"Artist:\n"
+            f"active_years = {self.active_years}\n"
+            f"uuid = {self.uuid}\n"
+            f"name = {self.name}\n"
+            f"uri = {self.uri}\n"
+        )
