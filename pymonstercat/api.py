@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv, set_key
+
+from .exceptions import ConfigHasNoCreds
 from .models import ArtistDetails, Artist
 
 # from requests import Session
@@ -15,16 +17,31 @@ class MonstercatAPI:
     ARTISTS = BASE + "artists"
     ARTIST = BASE + "artist/{artist_uri}"
 
-    def __init__(self, config_path: Path = Path(".env")):
+    def __init__(self, config_path: Path):
         self.client = HTTPClient(config_path=config_path)
+        if self.client.has_creds():
+            self.sign_in_email(
+                email=self.client.get_email(), password=self.client.get_password()
+            )
+        else:
+            raise ConfigHasNoCreds(f"No credentials found in {config_path.name}.")
 
-    def sign_in_email(self, email: str = None, password: str = None):
-        if self.client.has_cookies():
-            print("Using cookie from .env")
-            self.client.import_cookies()
-            return None
+    def sign_in_email(self, email: str | None = None, password: str | None = None):
+        if email is None or password is None:
+            if self.client.has_cookies():
+                print("Using cookie from yaml config.")
+                self.client.import_cookies()
+                return None
+        print(type(self.client.config_path))
+        if not self.client.has_creds():
+            raise ConfigHasNoCreds(
+                f"No credentials found in {self.client.config_path.name}."
+            )
 
-        payload = {"Email": email, "Password": password}
+        payload = {
+            "Email": self.client.get_email(),
+            "Password": self.client.get_password(),
+        }
         url = self.SIGN_IN
         response = self.client.post(
             url=url,
