@@ -2,11 +2,32 @@ import os
 from pathlib import Path
 import sys
 import time
+import yaml
 
 from dotenv import dotenv_values, set_key
 from httpx import Client, Cookies, Response, ConnectError, __version__ as httpx_version
 
 from . import __version__
+
+
+class ConfigObject:
+    def __init__(self, dictionary):
+        for key, value in dictionary.items():
+            if isinstance(value, dict):
+                value = ConfigObject(value)
+            self.__dict__[key] = value
+
+    def __getattr__(self, item):
+        return self.__dict__.get(item, None)
+
+    def __getitem__(self, item):
+        return self.__dict__.get(item, None)
+
+    def to_dict(self):
+        return {
+            key: value.to_dict() if isinstance(value, ConfigObject) else value
+            for key, value in self.__dict__.items()
+        }
 
 
 class HTTPClient:
@@ -19,18 +40,34 @@ class HTTPClient:
 
     def __init__(self, config_path: Path) -> None:
         self.__client = Client()
-        self.__config_path = config_path
-        self.__config = dotenv_values(self.__config_path)
-        print(self.__config)
         self.__client.headers = {
             "Accept": "application/json",
             "Content-Type": "application/json",
             "User-Agent": self.__user_agent,
         }
 
-        if "COOKIE" in self.__config:
-            cookie = self.__config["COOKIE"]
-            self.set_cookies(cookie)
+        self.__config_path = config_path
+        if not self.__config_path.exists():
+            self.create_config()
+        self.load_config()
+
+    def create_config(self) -> None:
+        self.__config = ConfigObject(
+            {
+                "creds": {"email": None, "password": None},
+                "cookie": {"value": None, "expires": None},
+                "remember_me": True,
+            }
+        )
+        self.save_config()
+
+    def load_config(self) -> None:
+        with open(self.__config_path, "r") as f:
+            self.__config = ConfigObject(yaml.safe_load(f))
+
+    def save_config(self) -> None:
+        with open(self.__config_path, "w") as f:
+            yaml.dump(self.__config.to_dict(), f)
 
     @staticmethod
     def catch_connect_error(func):
@@ -38,7 +75,7 @@ class HTTPClient:
             try:
                 return func(*args, **kwargs)
             except ConnectError as error:
-                print("Connection error")
+                print("Connection error.")
                 exit()
 
         return wrapper
@@ -55,24 +92,42 @@ class HTTPClient:
         self.__client.cookies = Cookies()
         self.__client.cookies.set(name="cid", value=cookie, domain=self.__domain)
 
-    def get_cookies(self) -> str:
-        return self.__client.cookies.get("cid")
+    def has_creds(self) -> bool:
+        return bool(self.get_email()) and bool(self.get_password())
+
+    def set_email(self, email: str) -> None:
+        self.__config.creds.email = email
+        self.save_config()
+
+    def set_password(self, password: str) -> None:
+        self.__config.creds.password = password
+        self.save_config()
+
+    def get_email(self) -> str:
+        return self.__config.creds.email
+
+    def get_password(self) -> str:
+        return self.__config.creds.password
+
+    def export_email(self, email: str) -> None:
+        self.__config.creds.email = email
+        self.save_config()
+
+    def export_password(self, password: str) -> None:
+        self.__config.creds.password = password
+        self.save_config()
 
     def has_cookies(self) -> bool:
-        return "COOKIE" in self.__config
+        return bool(self.__config.cookie.value)
+
+    def __get_cookies(self) -> str | None:
+        return self.__client.cookies.get("cid")
 
     def import_cookies(self) -> None:
-        cookie = self.__config["COOKIE"]
+        cookie = self.__config.cookie.value
         self.set_cookies(cookie)
 
     def export_cookies(self) -> None:
-        set_key(
-            dotenv_path=self.__config_path,
-            key_to_set="COOKIE",
-            value_to_set=self.get_cookies(),
-        )
-        set_key(
-            dotenv_path=self.__config_path,
-            key_to_set="COOKIE_EXPIRY",
-            value_to_set=str(int(time.time()) + 30 * 24 * 60 * 60),
-        )
+        self.__config.cookie.value = self.__get_cookies()
+        self.__config.cookie.expires = int(time.time()) + 30 * 86400
+        self.save_config()
