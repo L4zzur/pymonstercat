@@ -32,7 +32,7 @@ class ArtistDetails(JSONSerializable):
     Attributes:
         about (`str`, optional): Artist's bio.
         bookings (`str`, optional): Artist's bio.
-        managemen (`str`, optional): Artist's bio.
+        management (`str`, optional): Artist's bio.
     """
 
     about: str | None = None
