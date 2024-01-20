@@ -116,7 +116,7 @@ class Artist(JSONSerializable):
     is_public: bool
     do_show_event: bool
     uri: str
-    active_years: list[int] | None = field(default_factory=list)
+    active_years: list[int] = field(default_factory=list)
     tags: list[str] | None = field(default_factory=list)
     links: list[Link] | None = field(default_factory=list)
     about: str | None = None
