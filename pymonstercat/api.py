@@ -23,7 +23,9 @@ class MonstercatAPI:
     def __init__(self, config_path: Path):
         self.client = HTTPClient(config_path=config_path)
 
-    def sign_in_email(self, email: str | None = None, password: str | None = None):
+    def sign_in_email(
+        self, email: str | None = None, password: str | None = None
+    ) -> bool:
         if email is not None and password is not None:
             print("Setting email and password in yaml config.")
             self.client.set_email(email)
