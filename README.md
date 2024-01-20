@@ -5,10 +5,10 @@ Reference: https://github.com/defvs/connect-v2-docs/wiki
 
 ## Global models
 
-- [ ] Artist
+- [x] Artist
 - [ ] Error
 - [ ] File
-- [ ] Link
+- [x] Link
 - [ ] Playlist
 - [ ] Playlist Item
 - [ ] Release
@@ -18,15 +18,15 @@ Reference: https://github.com/defvs/connect-v2-docs/wiki
 - [ ] Track Artist
 - [ ] User
 
-## Authentication
-- [ ] Sign in
+## Authentication methods
+- [x] Sign in
 - [ ] Resend SMS 2FA code
 - [ ] Resend Email 2FA link
 - [ ] Sign out
 
 ## Artists methods
-- [ ] Browse artist
-- [ ] Get artist
+- [x] Browse artist
+- [x] Get artist
 - [ ] Get artist release
 - [ ] Get latest artists
 
