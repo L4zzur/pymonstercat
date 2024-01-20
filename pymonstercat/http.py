@@ -51,6 +51,9 @@ class HTTPClient:
             self.create_config()
         self.load_config()
 
+    def get_config_path(self) -> Path:
+        return self.__config_path
+
     def create_config(self) -> None:
         self.__config = ConfigObject(
             {
@@ -82,15 +85,20 @@ class HTTPClient:
 
     @catch_connect_error
     def post(self, url: str, json: dict | None = None) -> Response:
-        return self.__client.post(url=url, json=json)
+        return self.__client.post(
+            url=url,
+            json=json,
+        )
 
     @catch_connect_error
-    def get(self, url: str, params: dict | None = None) -> Response:
-        return self.__client.get(url=url, params=params)
-
-    def set_cookies(self, cookie: str) -> None:
-        self.__client.cookies = Cookies()
-        self.__client.cookies.set(name="cid", value=cookie, domain=self.__domain)
+    def get(
+        self, url: str, params: dict | None = None, follow_redirects: bool = False
+    ) -> Response:
+        return self.__client.get(
+            url=url,
+            params=params,
+            follow_redirects=follow_redirects,
+        )
 
     def has_creds(self) -> bool:
         return bool(self.get_email()) and bool(self.get_password())
@@ -109,12 +117,9 @@ class HTTPClient:
     def get_password(self) -> str:
         return self.__config.creds.password
 
-    def export_email(self, email: str) -> None:
-        self.__config.creds.email = email
-        self.save_config()
-
-    def export_password(self, password: str) -> None:
-        self.__config.creds.password = password
+    def remove_creds(self) -> None:
+        self.__config.creds.email = None
+        self.__config.creds.password = None
         self.save_config()
 
     def has_cookies(self) -> bool:
@@ -123,6 +128,10 @@ class HTTPClient:
     def __get_cookies(self) -> str | None:
         return self.__client.cookies.get("cid")
 
+    def set_cookies(self, cookie: str) -> None:
+        self.__client.cookies = Cookies()
+        self.__client.cookies.set(name="cid", value=cookie, domain=self.__domain)
+
     def import_cookies(self) -> None:
         cookie = self.__config.cookie.value
         self.set_cookies(cookie)
@@ -130,4 +139,9 @@ class HTTPClient:
     def export_cookies(self) -> None:
         self.__config.cookie.value = self.__get_cookies()
         self.__config.cookie.expires = int(time.time()) + 30 * 86400
+        self.save_config()
+
+    def remove_cookies(self) -> None:
+        self.__config.cookie.value = None
+        self.__config.cookie.expires = None
         self.save_config()
