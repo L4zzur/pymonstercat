@@ -1,11 +1,12 @@
 import os
-from pathlib import Path
 import sys
 import time
-import yaml
+from pathlib import Path
 
+import yaml
 from dotenv import dotenv_values, set_key
-from httpx import Client, Cookies, Response, ConnectError, __version__ as httpx_version
+from httpx import Client, ConnectError, Cookies, Response
+from httpx import __version__ as httpx_version
 
 from . import __version__
 

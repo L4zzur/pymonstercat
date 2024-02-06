@@ -2,14 +2,14 @@ import json
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv, set_key
 import httpx
+from dotenv import load_dotenv, set_key
 
 from .exceptions import ConfigHasNoCreds
-from .models import ArtistDetails, Artist
 
 # from requests import Session
 from .http import HTTPClient
+from .models import Artist, ArtistDetails
 
 
 class MonstercatAPI:
