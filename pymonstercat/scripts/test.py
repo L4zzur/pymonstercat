@@ -1,6 +1,7 @@
 from io import BytesIO
 from pathlib import Path
 
+from icecream import ic
 from PIL import Image
 
 
@@ -8,7 +9,7 @@ def main():
     from pymonstercat import MonstercatAPI
 
     path = Path("config_test.yaml")
-    print(path.absolute())
+    ic(path.absolute())
     api = MonstercatAPI(config_path=path)
     api.sign_in_email()
     # artists = api.get_artists(limit=2, offset=0, search="")
@@ -16,7 +17,7 @@ def main():
     #     print(artist.active_years)
     # artist = api.get_artist(artist_uri="curbi")
     # print(artist)
-    photo = api.get_artist_photo(artist_uri="curbi")
+    photo = api.get_artist_photo(artist_uri="hayve")
     if photo is None:
         print("No photo")
         return
