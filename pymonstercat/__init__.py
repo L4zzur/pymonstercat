@@ -7,4 +7,4 @@ __version__ = "0.1.0"
 
 __all__ = ["MonstercatAPI"]
 
-from .api import MonstercatAPI
+from pymonstercat.pymonstercat import MonstercatAPI
