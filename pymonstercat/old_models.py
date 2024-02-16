@@ -104,8 +104,10 @@ class Artist(JSONSerializable):
         portrait_file_uuid (`str`, optional): File ID for portrait.
         square_file_uuid (`str`, optional): File ID for square.
         logo_file_uuid (`str`, optional): File ID for logo.
-        featured_release_cover_file_uuid (`str`, optional): File ID for the cover of the featured release.
-        featured_release_uuid (`str`, optional): ID of artist's featured release.
+        featured_release_cover_file_uuid (`str`, optional): File ID for the \
+            cover of the featured release.
+        featured_release_uuid (`str`, optional): ID of artist's featured \
+            release.
         featured_video_url (`str`, optional): URL to artist's featured video.
     """
 

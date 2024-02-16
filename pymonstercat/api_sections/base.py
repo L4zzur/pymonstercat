@@ -1,14 +1,12 @@
-import os
 import sys
 import time
 from pathlib import Path
 
 import yaml
-from dotenv import dotenv_values, set_key
 from httpx import Client, ConnectError, Cookies, Response
 from httpx import __version__ as httpx_version
 
-from . import __version__
+from .. import __version__
 
 
 class ConfigObject:
@@ -31,11 +29,16 @@ class ConfigObject:
         }
 
 
-class HTTPClient:
+class PyMonstercatBase:
+    BASE = "https://player.monstercat.app/api/"
+    CDX = "https://cdx.monstercat.com"
+
     __domain = "player.monstercat.app"
     __user_agent = (
-        f"PyMonstercat v.{__version__} (https://github.com/L4zzur/pymonstercat), "
-        f"Python {sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}, "
+        f"PyMonstercat v.{__version__}"
+        f"(https://github.com/L4zzur/pymonstercat), "
+        f"Python"
+        f"{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}, "
         f"httpx {httpx_version}"
     )
 
@@ -78,14 +81,18 @@ class HTTPClient:
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
-            except ConnectError as error:
+            except ConnectError:
                 print("Connection error.")
                 exit()
 
         return wrapper
 
     @catch_connect_error
-    def post(self, url: str, json: dict | None = None) -> Response:
+    def post(
+        self,
+        url: str,
+        json: dict | None = None,
+    ) -> Response:
         return self.__client.post(
             url=url,
             json=json,
@@ -93,7 +100,10 @@ class HTTPClient:
 
     @catch_connect_error
     def get(
-        self, url: str, params: dict | None = None, follow_redirects: bool = False
+        self,
+        url: str,
+        params: dict | None = None,
+        follow_redirects: bool = False,
     ) -> Response:
         return self.__client.get(
             url=url,
@@ -131,7 +141,11 @@ class HTTPClient:
 
     def set_cookies(self, cookie: str) -> None:
         self.__client.cookies = Cookies()
-        self.__client.cookies.set(name="cid", value=cookie, domain=self.__domain)
+        self.__client.cookies.set(
+            name="cid",
+            value=cookie,
+            domain=self.__domain,
+        )
 
     def import_cookies(self) -> None:
         cookie = self.__config.cookie.value

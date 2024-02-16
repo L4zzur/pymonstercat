@@ -1,9 +1,7 @@
-import os
-from pathlib import Path
-from PIL import Image
 from io import BytesIO
+from pathlib import Path
 
-import requests
+from PIL import Image
 
 
 def main():
@@ -19,6 +17,9 @@ def main():
     # artist = api.get_artist(artist_uri="curbi")
     # print(artist)
     photo = api.get_artist_photo(artist_uri="curbi")
+    if photo is None:
+        print("No photo")
+        return
     i = Image.open(BytesIO(photo))
     i.show()
 
