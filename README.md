@@ -27,6 +27,7 @@ Reference: https://github.com/defvs/connect-v2-docs/wiki
 ## Artists methods
 - [x] Browse artist
 - [x] Get artist
+- [x] Get artist photo
 - [ ] Get artist release
 - [ ] Get latest artists
 
