@@ -91,8 +91,8 @@ class Release(JSONSerializable):
     release_date: str
     release_date_timezone: str
     title: str
-    type: str
-    version: str
+    type: str | None = None
+    version: str | None = None
     notes: str | None = None
     artists: list[ReleaseArtist] | None = None
     brand: Brand | None = None

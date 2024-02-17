@@ -45,5 +45,5 @@ class PyMonstercatReleases(PyMonstercatBase):
         response = self.get(url=url, params=params)
         ic(response.status_code)
         if response.status_code == 200:
-            release = Release.from_dict(response.json())
+            release = Release.from_dict(response.json()["Release"])
             return release
