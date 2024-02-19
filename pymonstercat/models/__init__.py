@@ -4,6 +4,7 @@ __all__ = [
     "Link",
 ]
 
-from pymonstercat.models.artist import Artist
-from pymonstercat.models.brand import Brand
-from pymonstercat.models.link import Link
+from .artist import Artist
+from .brand import Brand
+from .link import Link
+from .release import Release

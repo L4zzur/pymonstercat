@@ -17,12 +17,15 @@ def main():
     #     print(artist.active_years)
     # artist = api.get_artist(artist_uri="curbi")
     # print(artist)
-    photo = api.get_artist_photo(artist_uri="hayve")
-    if photo is None:
-        print("No photo")
-        return
-    i = Image.open(BytesIO(photo))
-    i.show()
+    # photo = api.get_artist_photo(artist_uri="hayve")
+    # if photo is None:
+    #     print("No photo")
+    #     return
+    # i = Image.open(BytesIO(photo))
+    # i.show()
+
+    ic(api.browse_releases(limit=2))
+    ic(api.get_release(catalog_id="742779551344"))
 
 
 if __name__ == "__main__":
