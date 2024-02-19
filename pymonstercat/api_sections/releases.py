@@ -1,3 +1,4 @@
+from httpx import URL
 from icecream import ic  # type: ignore
 
 from pymonstercat.api_sections.base import PyMonstercatBase
@@ -36,7 +37,7 @@ class PyMonstercatReleases(PyMonstercatBase):
         self,
         catalog_id: str | None = None,
         uuid: str | None = None,
-    ):
+    ) -> Release | None:
         if catalog_id is not None:
             url = self.RELEASE.format(id=catalog_id)
             params = {"idType": "CatalogId"}
@@ -57,7 +58,7 @@ class PyMonstercatReleases(PyMonstercatBase):
         catalog_id: str,
         width: int = 3000,
         encoding: str = "jpeg",
-    ):
+    ) -> URL | None:
         params = {
             "width": width,
             "encoding": encoding,
@@ -73,7 +74,7 @@ class PyMonstercatReleases(PyMonstercatBase):
     def get_related_releases(
         self,
         catalog_id: str,
-    ):
+    ) -> list[Release] | None:
         url = self.RELATED.format(id=catalog_id)
 
         response = self.get(url=url)
