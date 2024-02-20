@@ -55,7 +55,8 @@ class Release(JSONSerializable):
 
     Attributes:
         artists_string (str):
-        catalog_id (str): The catalog ID of the release. After Dec 1, 2022 the UPC is used.
+        catalog_id (str): The catalog ID of the release. \
+            After Dec 1, 2022 the UPC is used.
         description (str): Description of the release.
         uuid (str): The unique ID of the release.
         release_date (str): ISO8601 timestamp. The release date.
