@@ -1,5 +1,4 @@
 from httpx import URL
-from icecream import ic  # type: ignore
 
 from pymonstercat.api_sections.base import PyMonstercatBase
 from pymonstercat.models import Release

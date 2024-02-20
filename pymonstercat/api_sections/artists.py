@@ -1,8 +1,9 @@
-from icecream import ic
 from httpx import URL
+
 from pymonstercat.api_sections.base import PyMonstercatBase
-from pymonstercat.models import Artist
-from pymonstercat.models import Release
+from pymonstercat.models import Artist, Release
+
+# from icecream import ic
 
 
 class PyMonstercatArtists(PyMonstercatBase):
